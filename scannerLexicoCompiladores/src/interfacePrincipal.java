@@ -1,3 +1,6 @@
+
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -15,6 +18,8 @@ public class interfacePrincipal extends javax.swing.JFrame {
      */
     public interfacePrincipal() {
         initComponents();
+        txtCaixa.setEnabled(false);
+        
     }
 
     /**
@@ -26,41 +31,113 @@ public class interfacePrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        btnAnalisar = new javax.swing.JButton();
+        txtCaixa = new javax.swing.JTextField();
+        menuPrincipal = new javax.swing.JMenuBar();
+        menuSecAnalitice = new javax.swing.JMenu();
+        itemMenuAnalisar = new javax.swing.JMenuItem();
+        menuSecAbout = new javax.swing.JMenu();
+        menuSecSair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAnalisar.setBackground(new java.awt.Color(153, 255, 102));
+        btnAnalisar.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        btnAnalisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/search.png"))); // NOI18N
+        btnAnalisar.setText("Buscar & Analisar");
+        btnAnalisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAnalisarActionPerformed(evt);
             }
         });
+
+        txtCaixa.setEditable(false);
+        txtCaixa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCaixaActionPerformed(evt);
+            }
+        });
+
+        menuSecAnalitice.setBorder(null);
+        menuSecAnalitice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/analisar.png"))); // NOI18N
+        menuSecAnalitice.setText("<html> <body> <b> <font face=\"verdana\"> ANALISAR </font> </b>  </body> </html>");
+
+        itemMenuAnalisar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK));
+        itemMenuAnalisar.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        itemMenuAnalisar.setText("Analisar código descritivo");
+        itemMenuAnalisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMenuAnalisarActionPerformed(evt);
+            }
+        });
+        menuSecAnalitice.add(itemMenuAnalisar);
+
+        menuPrincipal.add(menuSecAnalitice);
+
+        menuSecAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/info.png"))); // NOI18N
+        menuSecAbout.setText("<html> <body> <b> <font face=\"verdana\">SOBRE </font> </b>  </body> </html>");
+        menuSecAbout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuSecAboutMouseClicked(evt);
+            }
+        });
+        menuPrincipal.add(menuSecAbout);
+
+        menuSecSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/off.png"))); // NOI18N
+        menuSecSair.setText("<html> <body> <b> <font face=\"verdana\"> SAIR </font> </b>  </body> </html>");
+        menuSecSair.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuSecSairMouseClicked(evt);
+            }
+        });
+        menuPrincipal.add(menuSecSair);
+
+        setJMenuBar(menuPrincipal);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(229, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(98, 98, 98))
+                .addContainerGap()
+                .addComponent(txtCaixa, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnAnalisar)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(108, 108, 108)
-                .addComponent(jButton1)
-                .addContainerGap(169, Short.MAX_VALUE))
+                .addGap(75, 75, 75)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAnalisar)
+                    .addComponent(txtCaixa, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(213, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void itemMenuAnalisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuAnalisarActionPerformed
+      
+    }//GEN-LAST:event_itemMenuAnalisarActionPerformed
+
+    private void menuSecAboutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuSecAboutMouseClicked
+        JOptionPane.showMessageDialog(null, "Muriel Souza e Vinicius Cavichioli. Disciplina: Compiladores, Profº: Jack Desevolvido por: ");
+    }//GEN-LAST:event_menuSecAboutMouseClicked
+
+    private void menuSecSairMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuSecSairMouseClicked
+        System.exit(0);
+    }//GEN-LAST:event_menuSecSairMouseClicked
+
+    private void btnAnalisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalisarActionPerformed
         telaBuscarArquivo frame = new telaBuscarArquivo();
         frame.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnAnalisarActionPerformed
+
+    private void txtCaixaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCaixaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCaixaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -99,6 +176,12 @@ public class interfacePrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnAnalisar;
+    private javax.swing.JMenuItem itemMenuAnalisar;
+    private javax.swing.JMenuBar menuPrincipal;
+    private javax.swing.JMenu menuSecAbout;
+    private javax.swing.JMenu menuSecAnalitice;
+    private javax.swing.JMenu menuSecSair;
+    private javax.swing.JTextField txtCaixa;
     // End of variables declaration//GEN-END:variables
 }
