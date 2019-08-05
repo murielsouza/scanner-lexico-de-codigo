@@ -1,9 +1,14 @@
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import static java.lang.Character.isDigit;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -34,7 +39,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
         txtCaixa.setEnabled(false);
         DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
         diretoNoCodigo();
-        analisar(); 
+        //analisar(); 
     }
 
     /**
@@ -70,7 +75,6 @@ public class interfacePrincipal extends javax.swing.JFrame {
             }
         });
 
-        txtCaixa.setEditable(false);
         txtCaixa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCaixaActionPerformed(evt);
@@ -210,16 +214,47 @@ public class interfacePrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_menuSecSairMouseClicked
 
     private void btnAnalisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalisarActionPerformed
-        telaBuscarArquivo frame = new telaBuscarArquivo();
-        frame.setVisible(true);
+        //telaBuscarArquivo frame = new telaBuscarArquivo();
+        //frame.setVisible(true);
+        JFileChooser chooser;
+        chooser = new JFileChooser();
+        String caminho = "";
+        //File file = null;
+        int retorno = chooser.showOpenDialog(null); // showSaveDialog retorna um inteiro , e ele ira determinar que o chooser será para salvar.
+        if (retorno==JFileChooser.APPROVE_OPTION){
+            caminho = chooser.getSelectedFile().getAbsolutePath();
+            txtCaixa.setText(caminho);// o getSelectedFile pega o arquivo e o getAbsolutePath retorna uma string contendo o endereço.
+            
+            File file = new File(caminho);
+                FileReader fis;
+                try {
+                       fis = new FileReader(file);
+                       BufferedReader bis = new BufferedReader(fis);
+                       while(bis.ready()) {
+                        analisar(bis.readLine()+"");
+                        break;
+                }
+                bis.close();
+                fis.close();
+               } catch (FileNotFoundException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+              } catch (IOException e) {
+             // TODO Auto-generated catch block
+             e.printStackTrace();
+            }
+        }
+        
+       // new EscolherArquivo().buscar();
     }//GEN-LAST:event_btnAnalisarActionPerformed
 
     private void txtCaixaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCaixaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCaixaActionPerformed
-    public void analisar(){
-        String codigofonte = "while i < 100 do i = i + j;";
-        
+    public void analisar(String codigofonte){
+        //String codigofonte = "while i < 100 do i = i + j;";
+        DefaultTableModel modelo = (DefaultTableModel)tbScannerLexico.getModel(); modelo.setNumRows(0);
+        DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel(); modeloSimbolos.setNumRows(0);
         Map<Integer,String> dicionarioCode = new TreeMap<>();
         
         String word = "";
@@ -240,7 +275,6 @@ public class interfacePrincipal extends javax.swing.JFrame {
         
         String JSON = "";
                 
-        DefaultTableModel modelo = (DefaultTableModel)tbScannerLexico.getModel();
         String[] linha;
                 
         Set<Integer> chaves = dicionarioCode.keySet();
