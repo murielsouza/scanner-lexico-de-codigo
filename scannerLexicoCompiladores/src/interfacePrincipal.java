@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,17 +20,21 @@ import javax.swing.JOptionPane;
  */
 public class interfacePrincipal extends javax.swing.JFrame {
     public static ArrayList<String> listaPalavrasReservadas = new ArrayList();
-    public static ArrayList<Character> listaOperadores = new ArrayList();
+    public static ArrayList<String> listaOperadores = new ArrayList();
     public static ArrayList<Character> listaTerminadores = new ArrayList();
     public static ArrayList<String> listaIdentificadores = new ArrayList();
     public static ArrayList<String> listaConstantes = new ArrayList();
     public static ArrayList<Integer> listaNumeros = new ArrayList();
+    public static ArrayList<String> listaIndices = new ArrayList();
+    
+    public static String[] linhaTBSimbolos;
     /**
      * Creates new form Interface
      */
     public interfacePrincipal() {
         initComponents();
         txtCaixa.setEnabled(false);
+        DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
         diretoNoCodigo();
         analisar(); 
     }
@@ -45,6 +50,10 @@ public class interfacePrincipal extends javax.swing.JFrame {
 
         btnAnalisar = new javax.swing.JButton();
         txtCaixa = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tbSimbolos = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tbScannerLexico = new javax.swing.JTable();
         menuPrincipal = new javax.swing.JMenuBar();
         menuSecAnalitice = new javax.swing.JMenu();
         itemMenuAnalisar = new javax.swing.JMenuItem();
@@ -69,6 +78,58 @@ public class interfacePrincipal extends javax.swing.JFrame {
                 txtCaixaActionPerformed(evt);
             }
         });
+
+        tbSimbolos.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        tbSimbolos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Indice", "Simbolo"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tbSimbolos);
+
+        tbScannerLexico.setFont(new java.awt.Font("Verdana", 0, 10)); // NOI18N
+        tbScannerLexico.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Token", "Identificação", "Tamanho", "Posição (0, x)"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(tbScannerLexico);
 
         menuSecAnalitice.setBorder(null);
         menuSecAnalitice.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/analisar.png"))); // NOI18N
@@ -110,21 +171,29 @@ public class interfacePrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtCaixa, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
+                    .addComponent(txtCaixa))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnAnalisar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAnalisar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(75, 75, 75)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAnalisar)
                     .addComponent(txtCaixa, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(213, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -152,14 +221,12 @@ public class interfacePrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCaixaActionPerformed
     public void analisar(){
         String codigofonte = "while i < 100 do i = i + j;";
-        ArrayList<String> listaCodeSimbolos = new ArrayList();
         
         Map<Integer,String> dicionarioCode = new TreeMap<>();
         
         String word = "";
         int inicioWord = 0;
-        for (int i = 0; codigofonte.length() > i; i++){
-            
+        for (int i = 0; codigofonte.length() > i; i++){     
             if(codigofonte.substring(i, i+1).equals(" ") || listaTerminadores.contains(codigofonte.substring(i, i+1).charAt(0))){
                 dicionarioCode.put(inicioWord, word);
                 word = "";
@@ -173,20 +240,102 @@ public class interfacePrincipal extends javax.swing.JFrame {
         }
         System.out.println(dicionarioCode);
         
-//        Set<Integer> chaves = dicionarioCode.keySet();
-//	for (int chave : chaves){
-//            System.out.println(chave + dicionarioCode.get(chave));
-//	}    
+        String JSON = "";
+                
+        DefaultTableModel modelo = (DefaultTableModel)tbScannerLexico.getModel();
+        String[] linha;
+                
+        Set<Integer> chaves = dicionarioCode.keySet();
+	for (int chave : chaves){  
+            if(isPalavraReservada(dicionarioCode.get(chave))){
+                //JSON = JSON + dicionarioCode.get(chave) + " | palavra reservada | " + dicionarioCode.get(chave).length() + "osição(0, " + chave + ")\n";
+                linha = new String[]{dicionarioCode.get(chave)+"", "palavra reservada"+"", dicionarioCode.get(chave).length()
+        +"","(0, " + chave + ")"};
+                modelo.addRow(linha);
+            }
+            
+            else if(isOperador(dicionarioCode.get(chave))){
+                //JSON = JSON + dicionarioCode.get(chave) + " | operador | " + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
+                linha = new String[]{dicionarioCode.get(chave)+"", "operador"+"", dicionarioCode.get(chave).length()
+        +"","(0, " + chave + ")"};
+                modelo.addRow(linha);
+            }
+            
+            else if(isIdentificador(dicionarioCode.get(chave))){                    
+                //JSON = JSON + dicionarioCode.get(chave) + " | [identificador, "+ idSimbolo + "] |" + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
+                linha = new String[]{dicionarioCode.get(chave)+"", "[identificador, "+ listaIndices.indexOf(dicionarioCode.get(chave)) + "]"+"", dicionarioCode.get(chave).length()
+        +"","(0, " + chave + ")"};
+                modelo.addRow(linha);
+            }
+            
+            else if(isTerminador(dicionarioCode.get(chave))){
+                //JSON = JSON + dicionarioCode.get(chave) + " | terminador | " + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
+                linha = new String[]{dicionarioCode.get(chave)+"", "terminador"+"", dicionarioCode.get(chave).length()
+        +"","(0, " + chave + ")"};
+                modelo.addRow(linha);
+            }
+            
+            else if(isConstante(dicionarioCode.get(chave))){
+                //JSON = JSON + dicionarioCode.get(chave) + " | [identificador, "+ idSimbolo + "] |" + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
+                 linha = new String[]{dicionarioCode.get(chave)+"", "[constante, "+ listaIndices.indexOf(dicionarioCode.get(chave)) + "]"+"", dicionarioCode.get(chave).length()
+        +"","(0, " + chave + ")"};
+                 modelo.addRow(linha);
+            }
+            
+            System.out.println(JSON);
+	}  
+        System.out.println(JSON);
     }
-    
+     public boolean isPalavraReservada(String p){
+         return listaPalavrasReservadas.contains(p);
+     }
+     
+     public boolean isOperador(String p){
+         return listaOperadores.contains(p);
+     }
+     
+     public boolean isIdentificador(String p){
+         if(listaIdentificadores.contains(p)){
+             DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
+             if(!listaIndices.contains(p)){
+                 listaIndices.add(p);
+                 linhaTBSimbolos = new String[]{listaIndices.indexOf(p)+"",p};
+                 modeloSimbolos.addRow(linhaTBSimbolos);
+             }
+             return true;
+         }
+         return false;
+     }
+     
+     public boolean isConstante(String p){
+        if (new Double(p).isNaN()){
+            return false;
+        }
+        else{
+            DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
+            if(!listaIndices.contains(p)){
+                 listaIndices.add(p);
+                 linhaTBSimbolos = new String[]{listaIndices.indexOf(p)+"",p};
+                modeloSimbolos.addRow(linhaTBSimbolos);
+             }
+            return true;
+        }
+     }
+     
+     public boolean isTerminador(String p){
+         if (p.length() == 1){
+            return listaTerminadores.contains(p.charAt(0));
+         }
+         return false;
+     }
     
     public void diretoNoCodigo(){
         listaPalavrasReservadas.add("while");
         listaPalavrasReservadas.add("do");
         
-        listaOperadores.add('<');
-        listaOperadores.add('=');
-        listaOperadores.add('+');
+        listaOperadores.add("<");
+        listaOperadores.add("=");
+        listaOperadores.add("+");
         
         listaTerminadores.add(';');
         
@@ -233,10 +382,14 @@ public class interfacePrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnalisar;
     private javax.swing.JMenuItem itemMenuAnalisar;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JMenuBar menuPrincipal;
     private javax.swing.JMenu menuSecAbout;
     private javax.swing.JMenu menuSecAnalitice;
     private javax.swing.JMenu menuSecSair;
+    private javax.swing.JTable tbScannerLexico;
+    private javax.swing.JTable tbSimbolos;
     private javax.swing.JTextField txtCaixa;
     // End of variables declaration//GEN-END:variables
 }
