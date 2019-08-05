@@ -1,0 +1,1 @@
+while i < 100 do i = i + j j = i + 306 + 67 while i < j + 6;
