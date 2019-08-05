@@ -1,4 +1,10 @@
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import javax.swing.JOptionPane;
 
 /*
@@ -12,14 +18,20 @@ import javax.swing.JOptionPane;
  * @author Vinicius Cavichioli
  */
 public class interfacePrincipal extends javax.swing.JFrame {
-
+    public static ArrayList<String> listaPalavrasReservadas = new ArrayList();
+    public static ArrayList<Character> listaOperadores = new ArrayList();
+    public static ArrayList<Character> listaTerminadores = new ArrayList();
+    public static ArrayList<String> listaIdentificadores = new ArrayList();
+    public static ArrayList<String> listaConstantes = new ArrayList();
+    public static ArrayList<Integer> listaNumeros = new ArrayList();
     /**
      * Creates new form Interface
      */
     public interfacePrincipal() {
         initComponents();
         txtCaixa.setEnabled(false);
-        
+        diretoNoCodigo();
+        analisar(); 
     }
 
     /**
@@ -138,7 +150,50 @@ public class interfacePrincipal extends javax.swing.JFrame {
     private void txtCaixaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCaixaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCaixaActionPerformed
-
+    public void analisar(){
+        String codigofonte = "while i < 100 do i = i + j;";
+        ArrayList<String> listaCodeSimbolos = new ArrayList();
+        
+        Map<Integer,String> dicionarioCode = new TreeMap<>();
+        
+        String word = "";
+        int inicioWord = 0;
+        for (int i = 0; codigofonte.length() > i; i++){
+            
+            if(codigofonte.substring(i, i+1).equals(" ") || listaTerminadores.contains(codigofonte.substring(i, i+1).charAt(0))){
+                dicionarioCode.put(inicioWord, word);
+                word = "";
+                inicioWord = i + 1;
+                if (listaTerminadores.contains(codigofonte.substring(i, i+1).charAt(0)))
+                    dicionarioCode.put(inicioWord,codigofonte.substring(i, i+1));
+            }
+            else{
+                word = word + codigofonte.substring(i, i+1);
+            }
+        }
+        System.out.println(dicionarioCode);
+        
+//        Set<Integer> chaves = dicionarioCode.keySet();
+//	for (int chave : chaves){
+//            System.out.println(chave + dicionarioCode.get(chave));
+//	}    
+    }
+    
+    
+    public void diretoNoCodigo(){
+        listaPalavrasReservadas.add("while");
+        listaPalavrasReservadas.add("do");
+        
+        listaOperadores.add('<');
+        listaOperadores.add('=');
+        listaOperadores.add('+');
+        
+        listaTerminadores.add(';');
+        
+        listaIdentificadores.add("i");
+        listaIdentificadores.add("j");       
+    }
+    
     /**
      * @param args the command line arguments
      */
