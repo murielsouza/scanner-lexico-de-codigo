@@ -1,7 +1,5 @@
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -27,7 +25,6 @@ public class interfacePrincipal extends javax.swing.JFrame {
     public static ArrayList<Integer> listaNumeros = new ArrayList();
     public static ArrayList<String> listaIndices = new ArrayList();
     
-    public static String[] linhaTBSimbolos;
     /**
      * Creates new form Interface
      */
@@ -299,8 +296,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
              DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
              if(!listaIndices.contains(p)){
                  listaIndices.add(p);
-                 linhaTBSimbolos = new String[]{listaIndices.indexOf(p)+"",p};
-                 modeloSimbolos.addRow(linhaTBSimbolos);
+                 modeloSimbolos.addRow(new String[]{listaIndices.indexOf(p)+"",p});
              }
              return true;
          }
@@ -315,8 +311,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
             DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
             if(!listaIndices.contains(p)){
                  listaIndices.add(p);
-                 linhaTBSimbolos = new String[]{listaIndices.indexOf(p)+"",p};
-                modeloSimbolos.addRow(linhaTBSimbolos);
+                 modeloSimbolos.addRow(new String[]{listaIndices.indexOf(p)+"",p});
              }
             return true;
         }
