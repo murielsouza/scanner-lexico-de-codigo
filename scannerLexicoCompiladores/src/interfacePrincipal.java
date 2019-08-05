@@ -260,7 +260,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
             
             else if(isIdentificador(dicionarioCode.get(chave))){                    
                 //JSON = JSON + dicionarioCode.get(chave) + " | [identificador, "+ idSimbolo + "] |" + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
-                linha = new String[]{dicionarioCode.get(chave)+"", "[identificador, "+ listaIndices.indexOf(dicionarioCode.get(chave)) + "]"+"", dicionarioCode.get(chave).length()
+                linha = new String[]{dicionarioCode.get(chave)+"", "[identificador, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1) + "]"+"", dicionarioCode.get(chave).length()
         +"","(0, " + chave + ")"};
                 modelo.addRow(linha);
             }
@@ -274,7 +274,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
             
             else if(isConstante(dicionarioCode.get(chave))){
                 //JSON = JSON + dicionarioCode.get(chave) + " | [identificador, "+ idSimbolo + "] |" + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
-                 linha = new String[]{dicionarioCode.get(chave)+"", "[constante, "+ listaIndices.indexOf(dicionarioCode.get(chave)) + "]"+"", dicionarioCode.get(chave).length()
+                 linha = new String[]{dicionarioCode.get(chave)+"", "[constante, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1)+ "]"+"", dicionarioCode.get(chave).length()
         +"","(0, " + chave + ")"};
                  modelo.addRow(linha);
             }
@@ -296,7 +296,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
              DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
              if(!listaIndices.contains(p)){
                  listaIndices.add(p);
-                 modeloSimbolos.addRow(new String[]{listaIndices.indexOf(p)+"",p});
+                 modeloSimbolos.addRow(new String[]{(listaIndices.indexOf(p)+1)+"",p});
              }
              return true;
          }
@@ -311,7 +311,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
             DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
             if(!listaIndices.contains(p)){
                  listaIndices.add(p);
-                 modeloSimbolos.addRow(new String[]{listaIndices.indexOf(p)+"",p});
+                 modeloSimbolos.addRow(new String[]{(listaIndices.indexOf(p)+1)+"",p});
              }
             return true;
         }
