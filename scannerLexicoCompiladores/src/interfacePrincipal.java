@@ -1,4 +1,5 @@
 
+import static java.lang.Character.isDigit;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -278,10 +279,12 @@ public class interfacePrincipal extends javax.swing.JFrame {
         +"","(0, " + chave + ")"};
                  modelo.addRow(linha);
             }
+            else{
+                JOptionPane.showMessageDialog(null, "Não foi possivel achar nenhum contexto para " + dicionarioCode.get(chave)+ ", esse elemento está na posição: " + "(0, " + chave + ")");
+                break;
+            }
             
-            System.out.println(JSON);
 	}  
-        System.out.println(JSON);
     }
      public boolean isPalavraReservada(String p){
          return listaPalavrasReservadas.contains(p);
@@ -304,17 +307,17 @@ public class interfacePrincipal extends javax.swing.JFrame {
      }
      
      public boolean isConstante(String p){
-        if (new Double(p).isNaN()){
-            return false;
+        for (int i = 0; p.length() > i; i++){     
+            if(!isDigit((p.substring(i, i+1).charAt(0)))){
+                return false;
+            }
         }
-        else{
-            DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
-            if(!listaIndices.contains(p)){
-                 listaIndices.add(p);
-                 modeloSimbolos.addRow(new String[]{(listaIndices.indexOf(p)+1)+"",p});
-             }
-            return true;
+        DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
+        if(!listaIndices.contains(p)){
+            listaIndices.add(p);
+            modeloSimbolos.addRow(new String[]{(listaIndices.indexOf(p)+1)+"",p});
         }
+        return true;
      }
      
      public boolean isTerminador(String p){
