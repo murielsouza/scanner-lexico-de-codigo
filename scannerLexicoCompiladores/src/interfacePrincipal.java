@@ -11,6 +11,11 @@ import java.util.TreeMap;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import java.io.FileWriter;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,9 +32,11 @@ public class interfacePrincipal extends javax.swing.JFrame {
     public static ArrayList<String> listaOperadores = new ArrayList();
     public static ArrayList<Character> listaTerminadores = new ArrayList();
     public static ArrayList<String> listaIdentificadores = new ArrayList();
-    public static ArrayList<String> listaConstantes = new ArrayList();
-    public static ArrayList<Integer> listaNumeros = new ArrayList();
+    //public static ArrayList<String> listaConstantes = new ArrayList();
+    //public static ArrayList<Integer> listaNumeros = new ArrayList();
     public static ArrayList<String> listaIndices = new ArrayList();
+    public static ArrayList<String> listaJSONTokens = new ArrayList();
+    public static ArrayList<String> listaJSONSimbolos = new ArrayList();
     
     /**
      * Creates new form Interface
@@ -39,6 +46,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
         txtCaixa.setEnabled(false);
         DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
         diretoNoCodigo();
+        
         //analisar(); 
     }
 
@@ -256,7 +264,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel)tbScannerLexico.getModel(); modelo.setNumRows(0);
         DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel(); modeloSimbolos.setNumRows(0);
         Map<Integer,String> dicionarioCode = new TreeMap<>();
-        
+        String erro = "";
         String word = "";
         int inicioWord = 0;
         for (int i = 0; codigofonte.length() > i; i++){     
@@ -280,7 +288,9 @@ public class interfacePrincipal extends javax.swing.JFrame {
         Set<Integer> chaves = dicionarioCode.keySet();
 	for (int chave : chaves){  
             if(isPalavraReservada(dicionarioCode.get(chave))){
-                //JSON = JSON + dicionarioCode.get(chave) + " | palavra reservada | " + dicionarioCode.get(chave).length() + "osição(0, " + chave + ")\n";
+                //JSON = JSON + dicionarioCode.get(chave) + " | palavra reservada | " + dicionarioCode.get(chave).length() + "posição(0, " + chave + ")\n";
+                Token t = new Token(dicionarioCode.get(chave), "palavra reservada", dicionarioCode.get(chave).length(), "(0, " + chave + ")");
+                criarJSON(t);
                 linha = new String[]{dicionarioCode.get(chave)+"", "palavra reservada"+"", dicionarioCode.get(chave).length()
         +"","(0, " + chave + ")"};
                 modelo.addRow(linha);
@@ -288,6 +298,8 @@ public class interfacePrincipal extends javax.swing.JFrame {
             
             else if(isOperador(dicionarioCode.get(chave))){
                 //JSON = JSON + dicionarioCode.get(chave) + " | operador | " + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
+                Token t = new Token(dicionarioCode.get(chave), "operador", dicionarioCode.get(chave).length(), "(0, " + chave + ")");
+                criarJSON(t);
                 linha = new String[]{dicionarioCode.get(chave)+"", "operador"+"", dicionarioCode.get(chave).length()
         +"","(0, " + chave + ")"};
                 modelo.addRow(linha);
@@ -295,30 +307,41 @@ public class interfacePrincipal extends javax.swing.JFrame {
             
             else if(isIdentificador(dicionarioCode.get(chave))){                    
                 //JSON = JSON + dicionarioCode.get(chave) + " | [identificador, "+ idSimbolo + "] |" + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
+                Token t = new Token(dicionarioCode.get(chave), "[identificador, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1) + "]", dicionarioCode.get(chave).length(), "(0, " + chave + ")");
+                criarJSON(t);
                 linha = new String[]{dicionarioCode.get(chave)+"", "[identificador, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1) + "]"+"", dicionarioCode.get(chave).length()
-        +"","(0, " + chave + ")"};
-                modelo.addRow(linha);
-            }
-            
-            else if(isTerminador(dicionarioCode.get(chave))){
-                //JSON = JSON + dicionarioCode.get(chave) + " | terminador | " + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
-                linha = new String[]{dicionarioCode.get(chave)+"", "terminador"+"", dicionarioCode.get(chave).length()
         +"","(0, " + chave + ")"};
                 modelo.addRow(linha);
             }
             
             else if(isConstante(dicionarioCode.get(chave))){
                 //JSON = JSON + dicionarioCode.get(chave) + " | [identificador, "+ idSimbolo + "] |" + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
-                 linha = new String[]{dicionarioCode.get(chave)+"", "[constante, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1)+ "]"+"", dicionarioCode.get(chave).length()
+                Token t = new Token(dicionarioCode.get(chave), "[constante, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1) + "]", dicionarioCode.get(chave).length(), "(0, " + chave + ")");
+                criarJSON(t); 
+                linha = new String[]{dicionarioCode.get(chave)+"", "[constante, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1)+ "]"+"", dicionarioCode.get(chave).length()
         +"","(0, " + chave + ")"};
                  modelo.addRow(linha);
             }
+            
+            else if(isTerminador(dicionarioCode.get(chave))){
+                //JSON = JSON + dicionarioCode.get(chave) + " | terminador | " + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
+                Token t = new Token(dicionarioCode.get(chave), "terminador", dicionarioCode.get(chave).length(), "(0, " + chave + ")");
+                criarJSON(t);
+                linha = new String[]{dicionarioCode.get(chave)+"", "terminador"+"", dicionarioCode.get(chave).length()
+        +"","(0, " + chave + ")"};
+                modelo.addRow(linha);
+            }
+            
             else{
-                JOptionPane.showMessageDialog(null, "Não foi possivel achar nenhum contexto para " + dicionarioCode.get(chave)+ ", esse elemento está na posição: " + "(0, " + chave + ")");
+                erro = "Não foi possivel achar nenhum contexto para " + dicionarioCode.get(chave)+ ", esse elemento está na posição: " + "(0, " + chave + ")";
+                JOptionPane.showMessageDialog(null, erro);
                 break;
             }
             
-	}  
+	}
+        JsonObject Jzao = new JsonObject();
+        imprimirSaida(listaJSONTokens, listaJSONSimbolos, erro);
+         
     }
      public boolean isPalavraReservada(String p){
          return listaPalavrasReservadas.contains(p);
@@ -332,8 +355,13 @@ public class interfacePrincipal extends javax.swing.JFrame {
          if(listaIdentificadores.contains(p)){
              DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
              if(!listaIndices.contains(p)){
-                 listaIndices.add(p);
-                 modeloSimbolos.addRow(new String[]{(listaIndices.indexOf(p)+1)+"",p});
+                listaIndices.add(p);
+                JsonObject simbolo = new JsonObject();
+                simbolo.addProperty("indice",listaIndices.size());
+                simbolo.addProperty("simbolo", p);
+                listaJSONSimbolos.add(simbolo.toString());
+                modeloSimbolos.addRow(new String[]{(listaIndices.size())+"",p});
+                 //System.out.println(simbolo.toString());
              }
              return true;
          }
@@ -349,6 +377,10 @@ public class interfacePrincipal extends javax.swing.JFrame {
         DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
         if(!listaIndices.contains(p)){
             listaIndices.add(p);
+            JsonObject simbolo = new JsonObject();
+                simbolo.addProperty("indice",listaIndices.size());
+                simbolo.addProperty("simbolo", p);
+                listaJSONSimbolos.add(simbolo.toString());
             modeloSimbolos.addRow(new String[]{(listaIndices.indexOf(p)+1)+"",p});
         }
         return true;
@@ -373,6 +405,38 @@ public class interfacePrincipal extends javax.swing.JFrame {
         
         listaIdentificadores.add("i");
         listaIdentificadores.add("j");       
+    }
+    public void criarJSON(Token t){
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        String JSON = gson.toJson(t);
+        listaJSONTokens.add(JSON);
+        //System.out.println(JSON);
+    }
+    
+    public void imprimirSaida(ArrayList<String> tokens, ArrayList<String> simbolos, String erro){
+        String saida = "{";
+        for (String s : tokens){
+            saida = saida + "\n\t" + s + ",";
+        }
+        saida = saida + "\n},\n{";
+        
+        for (String s : simbolos){
+            saida = saida + "\n\t" + s + ",";
+        }
+        saida = saida + "\n}";
+        if(!erro.isEmpty())
+            saida = saida + ",\n{\n\t" + erro + "\n}";
+        System.out.println(saida);
+        FileWriter arquivo;
+		try {
+			arquivo = new FileWriter(new File("scannerLexico.json"));
+			arquivo.write(saida);
+			arquivo.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
     
     /**
