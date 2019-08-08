@@ -68,6 +68,10 @@ public class interfacePrincipal extends javax.swing.JFrame {
         menuPrincipal = new javax.swing.JMenuBar();
         menuSecAnalitice = new javax.swing.JMenu();
         itemMenuAnalisar = new javax.swing.JMenuItem();
+        menuSecCad = new javax.swing.JMenu();
+        itemMenuCadPalavraReservada = new javax.swing.JMenuItem();
+        itemMenuCadOperador = new javax.swing.JMenuItem();
+        itemMenuCadIdentificador = new javax.swing.JMenuItem();
         menuSecAbout = new javax.swing.JMenu();
         menuSecSair = new javax.swing.JMenu();
 
@@ -157,11 +161,52 @@ public class interfacePrincipal extends javax.swing.JFrame {
 
         menuPrincipal.add(menuSecAnalitice);
 
+        menuSecCad.setBorder(null);
+        menuSecCad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/cadastroP.png"))); // NOI18N
+        menuSecCad.setText("<html> <body> <b> <font face=\"verdana\"> CADASTRAR </font> </b>  </body> </html>");
+
+        itemMenuCadPalavraReservada.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
+        itemMenuCadPalavraReservada.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        itemMenuCadPalavraReservada.setText("Cadastrar palavra reservada");
+        itemMenuCadPalavraReservada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMenuCadPalavraReservadaActionPerformed(evt);
+            }
+        });
+        menuSecCad.add(itemMenuCadPalavraReservada);
+
+        itemMenuCadOperador.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        itemMenuCadOperador.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        itemMenuCadOperador.setText("Cadastrar operador");
+        itemMenuCadOperador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMenuCadOperadorActionPerformed(evt);
+            }
+        });
+        menuSecCad.add(itemMenuCadOperador);
+
+        itemMenuCadIdentificador.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
+        itemMenuCadIdentificador.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        itemMenuCadIdentificador.setText("Cadastrar identificador");
+        itemMenuCadIdentificador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMenuCadIdentificadorActionPerformed(evt);
+            }
+        });
+        menuSecCad.add(itemMenuCadIdentificador);
+
+        menuPrincipal.add(menuSecCad);
+
         menuSecAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/info.png"))); // NOI18N
         menuSecAbout.setText("<html> <body> <b> <font face=\"verdana\">SOBRE </font> </b>  </body> </html>");
         menuSecAbout.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 menuSecAboutMouseClicked(evt);
+            }
+        });
+        menuSecAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuSecAboutActionPerformed(evt);
             }
         });
         menuPrincipal.add(menuSecAbout);
@@ -210,11 +255,13 @@ public class interfacePrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void itemMenuAnalisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuAnalisarActionPerformed
-      
+        btnAnalisarActionPerformed(evt);
     }//GEN-LAST:event_itemMenuAnalisarActionPerformed
 
     private void menuSecAboutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuSecAboutMouseClicked
-        JOptionPane.showMessageDialog(null, "Muriel Souza e Vinicius Cavichioli. Disciplina: Compiladores, Profº: Jack Desevolvido por: ");
+        telaSobreTodos telaSobre = new telaSobreTodos();
+        telaSobre.setVisible(true);
+        //JOptionPane.showMessageDialog(null, "Muriel Souza e Vinicius Cavichioli. Disciplina: Compiladores, Profº: Jack Desevolvido por: ");
     }//GEN-LAST:event_menuSecAboutMouseClicked
 
     private void menuSecSairMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuSecSairMouseClicked
@@ -259,6 +306,38 @@ public class interfacePrincipal extends javax.swing.JFrame {
     private void txtCaixaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCaixaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCaixaActionPerformed
+
+    private void itemMenuCadPalavraReservadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCadPalavraReservadaActionPerformed
+        String novaPalavra = (JOptionPane.showInputDialog("Palavras reservadas cadastradas:\n\t"+ listaPalavrasReservadas.toString() +"\nNova palavra reservada: "));
+        if (listaPalavrasReservadas.contains(novaPalavra) ||  !novaPalavra.matches("[a-zA-Z\\s]+") || novaPalavra.trim().isEmpty() || listaIdentificadores.contains(novaPalavra)){
+            JOptionPane.showMessageDialog(null,"ERRO! Essa palavra já está cadastrada ou é incompativel");
+        }
+        else{
+            listaPalavrasReservadas.add(novaPalavra);
+            JOptionPane.showMessageDialog(null,"Sucesso! Palavra reservada "+ novaPalavra + " foi cadastrada");
+        }
+    }//GEN-LAST:event_itemMenuCadPalavraReservadaActionPerformed
+
+    private void itemMenuCadOperadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCadOperadorActionPerformed
+        //chamarTela(2);
+    }//GEN-LAST:event_itemMenuCadOperadorActionPerformed
+
+    private void itemMenuCadIdentificadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCadIdentificadorActionPerformed
+         String novoIdentificador = (JOptionPane.showInputDialog("Identificadores Cadastrados:\n\t"+ listaIdentificadores.toString() +"\nNovo identificador: "));
+        if (listaPalavrasReservadas.contains(novoIdentificador) ||  !novoIdentificador.matches("[a-zA-Z\\s]+") || novoIdentificador.trim().isEmpty() || listaIdentificadores.contains(novoIdentificador)){
+            JOptionPane.showMessageDialog(null,"ERRO! Identificador já está cadastrada ou é incompativel");
+        }
+        else{
+            listaIdentificadores.add(novoIdentificador);
+            JOptionPane.showMessageDialog(null,"Sucesso! Identificador Cadastrado.");
+        }
+        //chamarTela(5);
+    }//GEN-LAST:event_itemMenuCadIdentificadorActionPerformed
+
+    private void menuSecAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSecAboutActionPerformed
+  
+// TODO add your handling code here:
+    }//GEN-LAST:event_menuSecAboutActionPerformed
     public void analisar(String codigofonte){
         //String codigofonte = "while i < 100 do i = i + j;";
         DefaultTableModel modelo = (DefaultTableModel)tbScannerLexico.getModel(); modelo.setNumRows(0);
@@ -478,11 +557,15 @@ public class interfacePrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnalisar;
     private javax.swing.JMenuItem itemMenuAnalisar;
+    private javax.swing.JMenuItem itemMenuCadIdentificador;
+    private javax.swing.JMenuItem itemMenuCadOperador;
+    private javax.swing.JMenuItem itemMenuCadPalavraReservada;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JMenuBar menuPrincipal;
     private javax.swing.JMenu menuSecAbout;
     private javax.swing.JMenu menuSecAnalitice;
+    private javax.swing.JMenu menuSecCad;
     private javax.swing.JMenu menuSecSair;
     private javax.swing.JTable tbScannerLexico;
     private javax.swing.JTable tbSimbolos;
