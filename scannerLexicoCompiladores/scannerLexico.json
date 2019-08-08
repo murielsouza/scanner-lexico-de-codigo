@@ -1,4 +1,4 @@
-{
+"tokens":{
 	{"token":"while","identificacao":"palavra reservada","tamanho":5,"posicao":"(0, 0)"},
 	{"token":"i","identificacao":"[identificador, 1]","tamanho":1,"posicao":"(0, 6)"},
 	{"token":"<","identificacao":"operador","tamanho":1,"posicao":"(0, 8)"},
@@ -16,19 +16,14 @@
 	{"token":"306","identificacao":"[constante, 4]","tamanho":3,"posicao":"(0, 35)"},
 	{"token":"+","identificacao":"operador","tamanho":1,"posicao":"(0, 39)"},
 	{"token":"67","identificacao":"[constante, 5]","tamanho":2,"posicao":"(0, 41)"},
-	{"token":"while","identificacao":"palavra reservada","tamanho":5,"posicao":"(0, 44)"},
-	{"token":"i","identificacao":"[identificador, 1]","tamanho":1,"posicao":"(0, 50)"},
-	{"token":"<","identificacao":"operador","tamanho":1,"posicao":"(0, 52)"},
-	{"token":"j","identificacao":"[identificador, 3]","tamanho":1,"posicao":"(0, 54)"},
-	{"token":"+","identificacao":"operador","tamanho":1,"posicao":"(0, 56)"},
-	{"token":"6","identificacao":"[constante, 6]","tamanho":1,"posicao":"(0, 58)"},
-	{"token":";","identificacao":"terminador","tamanho":1,"posicao":"(0, 60)"},
 },
-{
+ "simbolos":{
 	{"indice":1,"simbolo":"i"},
 	{"indice":2,"simbolo":"100"},
 	{"indice":3,"simbolo":"j"},
 	{"indice":4,"simbolo":"306"},
 	{"indice":5,"simbolo":"67"},
-	{"indice":6,"simbolo":"6"},
+},
+"erro":{
+	"erro": "Não foi possivel achar nenhum contexto para and, esse elemento está na posição: (0, 44)"
 }

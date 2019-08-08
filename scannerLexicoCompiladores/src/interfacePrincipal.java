@@ -493,18 +493,18 @@ public class interfacePrincipal extends javax.swing.JFrame {
     }
     
     public void imprimirSaida(ArrayList<String> tokens, ArrayList<String> simbolos, String erro){
-        String saida = "{";
+        String saida = "\"tokens\":{";
         for (String s : tokens){
             saida = saida + "\n\t" + s + ",";
         }
-        saida = saida + "\n},\n{";
+        saida = saida + "\n},\n \"simbolos\":{";
         
         for (String s : simbolos){
             saida = saida + "\n\t" + s + ",";
         }
         saida = saida + "\n}";
         if(!erro.isEmpty())
-            saida = saida + ",\n{\n\t" + erro + "\n}";
+            saida = saida + ",\n\"erros\":{\n\t\"erro\": \"" + erro + "\"\n}";
         System.out.println(saida);
         FileWriter arquivo;
 		try {
