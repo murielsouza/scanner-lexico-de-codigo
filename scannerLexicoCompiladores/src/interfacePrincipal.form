@@ -247,7 +247,7 @@
                 <Column editable="false" title="Token" type="java.lang.Object"/>
                 <Column editable="false" title="Identifica&#xe7;&#xe3;o" type="java.lang.Integer"/>
                 <Column editable="false" title="Tamanho" type="java.lang.Object"/>
-                <Column editable="false" title="Posi&#xe7;&#xe3;o (0, x)" type="java.lang.Object"/>
+                <Column editable="false" title="Posi&#xe7;&#xe3;o (x, y)" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

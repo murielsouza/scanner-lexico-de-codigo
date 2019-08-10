@@ -28,15 +28,17 @@ import java.io.FileWriter;
  * @author Vinicius Cavichioli
  */
 public class interfacePrincipal extends javax.swing.JFrame {
-    public static ArrayList<String> listaPalavrasReservadas = new ArrayList();
-    public static ArrayList<String> listaOperadores = new ArrayList();
-    public static ArrayList<Character> listaTerminadores = new ArrayList();
-    public static ArrayList<String> listaIdentificadores = new ArrayList();
-    //public static ArrayList<String> listaConstantes = new ArrayList();
-    //public static ArrayList<Integer> listaNumeros = new ArrayList();
-    public static ArrayList<String> listaIndices = new ArrayList();
-    public static ArrayList<String> listaJSONTokens = new ArrayList();
-    public static ArrayList<String> listaJSONSimbolos = new ArrayList();
+    ArrayList<String> listaPalavrasReservadas = new ArrayList();
+    ArrayList<String> listaOperadores = new ArrayList();
+    ArrayList<Character> listaTerminadores = new ArrayList();
+    ArrayList<String> listaIdentificadores = new ArrayList();
+    
+    ArrayList<String> listaIndices = new ArrayList();
+    ArrayList<String> listaJSONTokens = new ArrayList();
+    ArrayList<String> listaJSONSimbolos = new ArrayList();
+    static String erro = "";
+    static DefaultTableModel modelo;
+    static DefaultTableModel modeloSimbolos;
     
     /**
      * Creates new form Interface
@@ -44,7 +46,8 @@ public class interfacePrincipal extends javax.swing.JFrame {
     public interfacePrincipal() {
         initComponents();
         txtCaixa.setEnabled(false);
-        DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
+        modelo = (DefaultTableModel)tbScannerLexico.getModel();
+        modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
         diretoNoCodigo();
         
         //analisar(); 
@@ -125,7 +128,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Token", "Identificação", "Tamanho", "Posição (0, x)"
+                "Token", "Identificação", "Tamanho", "Posição (x, y)"
             }
         ) {
             Class[] types = new Class [] {
@@ -269,14 +272,15 @@ public class interfacePrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_menuSecSairMouseClicked
 
     private void btnAnalisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalisarActionPerformed
-        //telaBuscarArquivo frame = new telaBuscarArquivo();
-        //frame.setVisible(true);
+        
+        int contLines = 0;
         JFileChooser chooser;
         chooser = new JFileChooser();
         String caminho = "";
         //File file = null;
         int retorno = chooser.showOpenDialog(null); // showSaveDialog retorna um inteiro , e ele ira determinar que o chooser será para salvar.
         if (retorno==JFileChooser.APPROVE_OPTION){
+            limpar();
             caminho = chooser.getSelectedFile().getAbsolutePath();
             txtCaixa.setText(caminho);// o getSelectedFile pega o arquivo e o getAbsolutePath retorna uma string contendo o endereço.
             
@@ -286,9 +290,15 @@ public class interfacePrincipal extends javax.swing.JFrame {
                        fis = new FileReader(file);
                        BufferedReader bis = new BufferedReader(fis);
                        while(bis.ready()) {
-                        analisar(bis.readLine()+"");
-                        break;
+                           if (erro.equals("")){
+                                analisar(bis.readLine()+"", contLines);
+                           }
+                           else{
+                               break;
+                           }
+                        contLines++;
                 }
+                imprimirSaida(listaJSONTokens, listaJSONSimbolos, erro);       
                 bis.close();
                 fis.close();
                } catch (FileNotFoundException e) {
@@ -338,12 +348,10 @@ public class interfacePrincipal extends javax.swing.JFrame {
   
 // TODO add your handling code here:
     }//GEN-LAST:event_menuSecAboutActionPerformed
-    public void analisar(String codigofonte){
+    public void analisar(String codigofonte, int numLinha){
         //String codigofonte = "while i < 100 do i = i + j;";
-        DefaultTableModel modelo = (DefaultTableModel)tbScannerLexico.getModel(); modelo.setNumRows(0);
-        DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel(); modeloSimbolos.setNumRows(0);
         Map<Integer,String> dicionarioCode = new TreeMap<>();
-        String erro = "";
+        dicionarioCode.clear();
         String word = "";
         int inicioWord = 0;
         for (int i = 0; codigofonte.length() > i; i++){     
@@ -368,58 +376,58 @@ public class interfacePrincipal extends javax.swing.JFrame {
 	for (int chave : chaves){  
             if(isPalavraReservada(dicionarioCode.get(chave))){
                 //JSON = JSON + dicionarioCode.get(chave) + " | palavra reservada | " + dicionarioCode.get(chave).length() + "posição(0, " + chave + ")\n";
-                Token t = new Token(dicionarioCode.get(chave), "palavra reservada", dicionarioCode.get(chave).length(), "(0, " + chave + ")");
+                Token t = new Token(dicionarioCode.get(chave), "palavra reservada", dicionarioCode.get(chave).length(), "(" +numLinha+" , "+ chave + ")");
                 criarJSON(t);
                 linha = new String[]{dicionarioCode.get(chave)+"", "palavra reservada"+"", dicionarioCode.get(chave).length()
-        +"","(0, " + chave + ")"};
+        +"","(" +numLinha+" , "+ chave + ")"};
                 modelo.addRow(linha);
             }
             
             else if(isOperador(dicionarioCode.get(chave))){
                 //JSON = JSON + dicionarioCode.get(chave) + " | operador | " + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
-                Token t = new Token(dicionarioCode.get(chave), "operador", dicionarioCode.get(chave).length(), "(0, " + chave + ")");
+                Token t = new Token(dicionarioCode.get(chave), "operador", dicionarioCode.get(chave).length(), "(" +numLinha+" , "+ chave + ")");
                 criarJSON(t);
                 linha = new String[]{dicionarioCode.get(chave)+"", "operador"+"", dicionarioCode.get(chave).length()
-        +"","(0, " + chave + ")"};
+        +"","(" +numLinha+" , "+ chave + ")"};
                 modelo.addRow(linha);
             }
             
             else if(isIdentificador(dicionarioCode.get(chave))){                    
                 //JSON = JSON + dicionarioCode.get(chave) + " | [identificador, "+ idSimbolo + "] |" + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
-                Token t = new Token(dicionarioCode.get(chave), "[identificador, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1) + "]", dicionarioCode.get(chave).length(), "(0, " + chave + ")");
+                Token t = new Token(dicionarioCode.get(chave), "[identificador, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1) + "]", dicionarioCode.get(chave).length(), "(" +numLinha+" , "+ chave + ")");
                 criarJSON(t);
                 linha = new String[]{dicionarioCode.get(chave)+"", "[identificador, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1) + "]"+"", dicionarioCode.get(chave).length()
-        +"","(0, " + chave + ")"};
+        +"","(" +numLinha+" , "+ chave + ")"};
                 modelo.addRow(linha);
             }
             
             else if(isConstante(dicionarioCode.get(chave))){
                 //JSON = JSON + dicionarioCode.get(chave) + " | [identificador, "+ idSimbolo + "] |" + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
-                Token t = new Token(dicionarioCode.get(chave), "[constante, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1) + "]", dicionarioCode.get(chave).length(), "(0, " + chave + ")");
+                Token t = new Token(dicionarioCode.get(chave), "[constante, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1) + "]", dicionarioCode.get(chave).length(), "(" +numLinha+" , "+ chave + ")");
                 criarJSON(t); 
                 linha = new String[]{dicionarioCode.get(chave)+"", "[constante, "+ (listaIndices.indexOf(dicionarioCode.get(chave))+1)+ "]"+"", dicionarioCode.get(chave).length()
-        +"","(0, " + chave + ")"};
+        +"","(" +numLinha+" , "+ chave + ")"};
                  modelo.addRow(linha);
             }
             
             else if(isTerminador(dicionarioCode.get(chave))){
                 //JSON = JSON + dicionarioCode.get(chave) + " | terminador | " + dicionarioCode.get(chave).length() + " | posição(0, " + chave + ")\n";
-                Token t = new Token(dicionarioCode.get(chave), "terminador", dicionarioCode.get(chave).length(), "(0, " + chave + ")");
+                Token t = new Token(dicionarioCode.get(chave), "terminador", dicionarioCode.get(chave).length(), "(" +numLinha+" , "+ chave + ")");
                 criarJSON(t);
                 linha = new String[]{dicionarioCode.get(chave)+"", "terminador"+"", dicionarioCode.get(chave).length()
-        +"","(0, " + chave + ")"};
+        +"","(" +numLinha+" , "+ chave + ")"};
                 modelo.addRow(linha);
             }
             
             else{
-                erro = "Não foi possivel achar nenhum contexto para " + dicionarioCode.get(chave)+ ", esse elemento está na posição: " + "(0, " + chave + ")";
+                erro = "Não foi possivel achar nenhum contexto para " + dicionarioCode.get(chave)+ ", esse elemento está na posição: " + "(" +numLinha+" , "+ chave + ")";
                 JOptionPane.showMessageDialog(null, erro);
                 break;
             }
             
 	}
-        JsonObject Jzao = new JsonObject();
-        imprimirSaida(listaJSONTokens, listaJSONSimbolos, erro);
+        //JsonObject Jzao = new JsonObject();
+        
          
     }
      public boolean isPalavraReservada(String p){
@@ -432,7 +440,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
      
      public boolean isIdentificador(String p){
          if(listaIdentificadores.contains(p)){
-             DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
+             modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
              if(!listaIndices.contains(p)){
                 listaIndices.add(p);
                 JsonObject simbolo = new JsonObject();
@@ -453,7 +461,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
                 return false;
             }
         }
-        DefaultTableModel modeloSimbolos = (DefaultTableModel)tbSimbolos.getModel();
+        modeloSimbolos = (DefaultTableModel) tbSimbolos.getModel();
         if(!listaIndices.contains(p)){
             listaIndices.add(p);
             JsonObject simbolo = new JsonObject();
@@ -516,6 +524,15 @@ public class interfacePrincipal extends javax.swing.JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+    
+    public void limpar(){
+        listaIndices.clear();
+        listaJSONTokens.clear();
+        listaJSONSimbolos.clear();
+        modelo.setNumRows(0);
+        modeloSimbolos.setNumRows(0);
+        erro = "";
     }
     
     /**
