@@ -79,6 +79,7 @@ public class interfacePrincipal extends javax.swing.JFrame {
         menuSecSair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Analisador Léxico 1.0 - Compiladores");
 
         btnAnalisar.setBackground(new java.awt.Color(153, 255, 102));
         btnAnalisar.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
