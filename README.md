@@ -20,6 +20,6 @@ Essas bibliotecas (em azul) permitem executar a aplicação. Recomenda-se a inst
 * Gera os arquivos JSON e as tabelas (na interface-gráfica) durante sua execução,
 * E o mais importante: FOI FEITO COM ❤.
 
-## documentação completa acesse o [Wiki](https://github.com/murielsouza/scanner-lexico-de-codigo/wiki/DOCUMENTA%C3%87%C3%83O-DO-REPOSIT%C3%93RIO):
+## documentação completa acesse o [Wiki](https://github.com/murielsouza/scanner-lexico-de-codigo/wiki/scanner-lexico-document):
 
-[![Wiki documentacao](https://img.shields.io/badge/documenta%C3%A7%C3%A3o%20completa%3A-CLIQUE%20AQUI-success?style=for-the-badge&logo=appveyor.svg)](https://github.com/murielsouza/scanner-lexico-de-codigo/wiki/DOCUMENTA%C3%87%C3%83O-DO-REPOSIT%C3%93RIO)
+[![Wiki documentacao](https://img.shields.io/badge/documenta%C3%A7%C3%A3o%20completa%3A-CLIQUE%20AQUI-success?style=for-the-badge&logo=appveyor.svg)](https://github.com/murielsouza/scanner-lexico-de-codigo/wiki/scanner-lexico-document)
