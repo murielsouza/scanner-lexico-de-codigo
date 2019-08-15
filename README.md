@@ -11,6 +11,16 @@ Essas bibliotecas (em azul) permitem executar a aplicação. Recomenda-se a inst
 [![Java Development Kit v.8.0](https://img.shields.io/badge/JDK-v.8%20Update%20211-green.svg)](https://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html)
 [![GSON 2.8.0](https://img.shields.io/badge/GSON-v.2.8.0-blue.svg)](https://mvnrepository.com/artifact/com.google.code.gson/gson/2.8.0)
 
+**Por que usar esse repositório?**
+### Vantagens
+
+* É Simples e funcional,
+* Tem interface gráfica,
+* Permite adição de novas palavras reservadas ou identificadores via interface gráfica,
+* Pode utilizar um código-fonte com diversas linhas (o código não precisa está em uma linha somente), 
+* Gera os arquivos JSON e as tabelas (na interface-gráfica) durante sua execução,
+* E o mais importante: FOI FEITO COM ❤.
+
 Esse repositório contém um analisador léxico com as seguintes caracteristicas: 
 
       palavras reservadas: while, do
@@ -19,6 +29,7 @@ Esse repositório contém um analisador léxico com as seguintes caracteristicas
       identificadores: i, j
       constantes: sequência de números
       números: 0 ... 9
+
 
 
 Por meio da entrada de um arquivo texto (qualquer nome e qualquer extensão), o scanner processa (analisa) e gera na saída um arquivo JSON, contendo a tabela de tokens, a tabela de símbolos e um possível erro encontrado durante a análise.
